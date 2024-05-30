@@ -1,0 +1,107 @@
+<div *ngIf="!isShowTimeup">
+    <div class="col-12">
+        <div *ngIf="questionDetail" class="card mb-4">
+
+            <div class="card-body mb-0 p-1">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="row float-start" style="margin-left: 1rem;">
+                            <h5 class="card-header">{{ questionDetail.title }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fillter -->
+
+            <hr class="m-0" />
+
+            <div class="p-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" [ngClass]="{disabled: questionInfo.sequence == 1}">
+                            <a class="page-link" (click)="back(questionInfo.sequence - 1)">Previous</a>
+                            
+                        </li>
+                        <div *ngFor="let question of questionDetail.questionInfo; let i = index">
+                            <li class="page-item" [ngClass]="{disabled: questionInfo.sequence < (i+1)}"><a
+                                    class="page-link" (click)="getPaging(i)">{{ i + 1 }}</a></li>
+                        </div>
+                        <li class="page-item"
+                            [ngClass]="{disabled: !hasAnswerSelected(questionInfo.sequence)}">
+                            <a class="page-link" (click)="next(questionInfo.sequence)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="p-3">
+                <nav aria-label="Page navigation example">
+                    <h3 class="pagination justify-content-center">Time Limit</h3>
+                    <h2 class="pagination justify-content-center" style="color:red;">
+                        {{ time }}
+                    </h2>
+                </nav>
+            </div>
+            <div *ngIf="questionInfo" class="card-body mx-5">
+                <div class="mx-5">
+                    <h5 class="card-header p-1">ข้อที่{{questionInfo.sequence}}. {{questionInfo.title}}</h5>
+                    <div class="row gy-3 float-center">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="card mt-2 mb-2 w-50">
+                                        <div class="card-body">
+                                            <div *ngFor="let a of questionInfo.questionAnswerInfo; let i = index">
+                                                <div class="form-check" (checked)="isChecked(a.questionAnswerId)"
+                                                    (change)="onCheckboxChange($event, a)">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        value="{{a.questionAnswerId}}"
+                                                        name="{{questionInfo.questionId}}">
+                                                    <label class="form-check-label" for="flexCheckChecked">
+                                                        {{a.answer}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer m-4">
+                <div class="row float-end">
+                    <div class="col-md-12">
+                        <div class="demo-inline-spacing">
+                            <button *ngIf="questionInfo.sequence > 1" type="button" class="btn btn-secondary m-2"
+                                (click)="back(questionInfo.sequence - 1)">
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-primary" (click)="next(questionInfo.sequence)"
+                                [disabled]="!hasAnswerSelected(questionInfo.sequence)"
+                                *ngIf="questionInfo.sequence < questionDetail.questionInfo.length">
+                                Next
+                            </button>
+                            <button type="button" class="btn btn-primary" (click)="submit()"
+                                [disabled]="!hasAnswerSelected(questionInfo.sequence)"
+                                *ngIf="questionInfo.sequence === questionDetail.questionInfo.length">ส่งคำตอบ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isShowTimeup" class="card-body mx-5">
+    <div style="margin-top: 50px;margin-left: auto;margin-right: auto;text-align: center;">
+        <h3>ผลคะแนนของคุณคือ</h3>
+        <h3>{{totalScore}}</h3>
+    </div>
+    <div style="margin-top: 50px;margin-left: auto;margin-right: auto;text-align: center;">
+        <button type="button" class="btn btn-primary" (click)="ok()">
+            OK
+        </button>
+    </div>
+</div>
